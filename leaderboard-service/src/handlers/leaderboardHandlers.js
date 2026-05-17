@@ -7,17 +7,19 @@ const getLeaderboard = async (call, callback) => {
 
   try {
     const db = await getDb();
-    // InRxDB memory storage, we fetch all and sort manually for simplicity
     const allStats = await db.player_stats.find().exec();
-    
-    // Convert to plain JSON and sort by total_score descending
-    let sorted = allStats.map(doc => doc.toJSON()).sort((a, b) => b.total_score - a.total_score);
+    const stats = allStats.map(doc => doc.toJSON());
+    const filteredStats = game
+      ? stats.filter(stat => stat.game_scores && stat.game_scores[game] !== undefined)
+      : stats;
 
-    // Apply ranking
+    const scoreFor = stat => game ? stat.game_scores[game] : stat.total_score;
+    const sorted = filteredStats.sort((a, b) => scoreFor(b) - scoreFor(a));
+
     const entries = sorted.slice(0, limit).map((stat, index) => ({
       player_id: stat.player_id,
       username: stat.username || 'Unknown',
-      total_score: stat.total_score,
+      total_score: scoreFor(stat),
       rank: index + 1,
       wins: stat.wins
     }));
@@ -40,12 +42,18 @@ const getPlayerStats = async (call, callback) => {
 
     if (statDoc) {
       const data = statDoc.toJSON();
+      const allStats = await db.player_stats.find().exec();
+      const sorted = allStats
+        .map(doc => doc.toJSON())
+        .sort((a, b) => b.total_score - a.total_score);
+      const rank = sorted.findIndex(stat => stat.player_id === player_id) + 1;
+
       callback(null, {
         player_id: data.player_id,
         total_score: data.total_score,
         wins: data.wins,
         games_played: data.games_played,
-        rank: data.rank || 0
+        rank
       });
     } else {
       callback({ code: 5, message: 'Player stats not found' });

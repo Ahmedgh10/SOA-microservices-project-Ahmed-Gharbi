@@ -4,7 +4,8 @@ const leaderboardClient = require('../../grpc/leaderboardClient');
 
 router.get('/', (req, res) => {
   const top_n = parseInt(req.query.top_n) || 10;
-  leaderboardClient.GetLeaderboard({ top_n }, (err, response) => {
+  const game = req.query.game || '';
+  leaderboardClient.GetLeaderboard({ top_n, game }, (err, response) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(response.entries || []);
   });
