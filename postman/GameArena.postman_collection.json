@@ -31,7 +31,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/users",
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"player99_{{$timestamp}}\",\n  \"email\": \"player99_{{$timestamp}}@arena.com\",\n  \"password\": \"secure123\"\n}"
@@ -55,7 +59,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/users",
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"player_two_{{$timestamp}}\",\n  \"email\": \"player_two_{{$timestamp}}@arena.com\",\n  \"password\": \"secure123\"\n}"
@@ -66,14 +74,26 @@
           "name": "List Users",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/api/users?page=1&limit=10"
+            "url": {
+              "raw": "{{baseUrl}}/api/users?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
           }
         },
         {
           "name": "Get User",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/api/users/{{userId}}"
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            }
           }
         },
         {
@@ -81,7 +101,11 @@
           "request": {
             "method": "PUT",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/users/{{userId}}",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"player99_updated_{{$timestamp}}\",\n  \"email\": \"player99.updated_{{$timestamp}}@arena.com\"\n}"
@@ -110,7 +134,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/sessions",
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"game_name\": \"Valorant\",\n  \"host_id\": \"{{userId}}\",\n  \"max_players\": 5\n}"
@@ -121,14 +149,25 @@
           "name": "List Sessions",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/api/sessions?status=open"
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions?status=open",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions"],
+              "query": [
+                { "key": "status", "value": "open" }
+              ]
+            }
           }
         },
         {
           "name": "Get Session",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/api/sessions/{{sessionId}}"
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sessionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sessionId}}"]
+            }
           }
         },
         {
@@ -136,7 +175,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/sessions/{{sessionId}}/join",
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sessionId}}/join",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sessionId}}", "join"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"player_id\": \"{{playerTwoId}}\"\n}"
@@ -148,7 +191,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/sessions/{{sessionId}}/end",
+            "url": {
+              "raw": "{{baseUrl}}/api/sessions/{{sessionId}}/end",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sessions", "{{sessionId}}", "end"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"winner_id\": \"{{userId}}\",\n  \"scores\": [\n    { \"player_id\": \"{{userId}}\", \"score\": 1000 },\n    { \"player_id\": \"{{playerTwoId}}\", \"score\": 500 }\n  ]\n}"
@@ -164,21 +211,36 @@
           "name": "Get Leaderboard",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/api/leaderboard?top_n=10"
+            "url": {
+              "raw": "{{baseUrl}}/api/leaderboard?top_n=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "leaderboard"],
+              "query": [
+                { "key": "top_n", "value": "10" }
+              ]
+            }
           }
         },
         {
           "name": "Get Player Stats",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/api/leaderboard/{{userId}}/stats"
+            "url": {
+              "raw": "{{baseUrl}}/api/leaderboard/{{userId}}/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "leaderboard", "{{userId}}", "stats"]
+            }
           }
         },
         {
           "name": "Get Player Achievements",
           "request": {
             "method": "GET",
-            "url": "{{baseUrl}}/api/leaderboard/{{userId}}/achievements"
+            "url": {
+              "raw": "{{baseUrl}}/api/leaderboard/{{userId}}/achievements",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "leaderboard", "{{userId}}", "achievements"]
+            }
           }
         }
       ]
@@ -191,7 +253,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/graphql",
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": ["{{baseUrl}}"],
+              "path": ["graphql"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"query\": \"query { getLeaderboard(top_n: 10) { rank player_id username total_score wins } }\"\n}"
@@ -203,7 +269,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/graphql",
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": ["{{baseUrl}}"],
+              "path": ["graphql"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"query\": \"query PlayerDashboard($playerId: ID!) { getPlayerStats(player_id: $playerId) { player_id total_score wins games_played rank } getPlayerAchievements(player_id: $playerId) { title description unlocked_at } }\",\n  \"variables\": { \"playerId\": \"{{userId}}\" }\n}"
@@ -215,7 +285,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/graphql",
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": ["{{baseUrl}}"],
+              "path": ["graphql"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"query\": \"mutation CreateUser($username: String!, $email: String!) { createUser(username: $username, email: $email, password: \\\"secure123\\\") { user_id username email total_wins created_at } }\",\n  \"variables\": {\n    \"username\": \"graphql_player_{{$timestamp}}\",\n    \"email\": \"graphql_{{$timestamp}}@arena.com\"\n  }\n}"
@@ -227,7 +301,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/graphql",
+            "url": {
+              "raw": "{{baseUrl}}/graphql",
+              "host": ["{{baseUrl}}"],
+              "path": ["graphql"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"query\": \"mutation EndSession($sessionId: ID!, $winnerId: ID!) { endSession(session_id: $sessionId, winner_id: $winnerId, scores: [{ player_id: $winnerId, score: 1000 }]) { session_id status winner_id player_ids } }\",\n  \"variables\": { \"sessionId\": \"{{sessionId}}\", \"winnerId\": \"{{userId}}\" }\n}"
@@ -243,7 +321,11 @@
           "name": "Delete User",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/api/users/{{userId}}"
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            }
           }
         }
       ]
