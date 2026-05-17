@@ -1,0 +1,223 @@
+{
+  "info": {
+    "_postman_id": "4ac24419-7638-4d30-9d16-44f669c2b63c",
+    "name": "GameArena REST API",
+    "description": "REST-only fallback collection for GameArena.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "userId", "value": "USER_ID_HERE", "type": "string" },
+    { "key": "playerTwoId", "value": "PLAYER_2_ID_HERE", "type": "string" },
+    { "key": "sessionId", "value": "SESSION_ID_HERE", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Create User",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"player99_{{$timestamp}}\",\n  \"email\": \"player99_{{$timestamp}}@arena.com\",\n  \"password\": \"secure123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users"]
+        }
+      }
+    },
+    {
+      "name": "List Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users?page=1&limit=10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get User",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "{{userId}}"]
+        }
+      }
+    },
+    {
+      "name": "Update User",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"player99_updated_{{$timestamp}}\",\n  \"email\": \"player99.updated_{{$timestamp}}@arena.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "{{userId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Session",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"game_name\": \"Valorant\",\n  \"host_id\": \"{{userId}}\",\n  \"max_players\": 5\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/sessions",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "sessions"]
+        }
+      }
+    },
+    {
+      "name": "List Sessions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/sessions?status=open",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "sessions"],
+          "query": [{ "key": "status", "value": "open" }]
+        }
+      }
+    },
+    {
+      "name": "Get Session",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/sessions/{{sessionId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "sessions", "{{sessionId}}"]
+        }
+      }
+    },
+    {
+      "name": "Join Session",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"player_id\": \"{{playerTwoId}}\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/sessions/{{sessionId}}/join",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "sessions", "{{sessionId}}", "join"]
+        }
+      }
+    },
+    {
+      "name": "End Session",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"winner_id\": \"{{userId}}\",\n  \"scores\": [\n    { \"player_id\": \"{{userId}}\", \"score\": 1000 },\n    { \"player_id\": \"{{playerTwoId}}\", \"score\": 500 }\n  ]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/sessions/{{sessionId}}/end",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "sessions", "{{sessionId}}", "end"]
+        }
+      }
+    },
+    {
+      "name": "Get Leaderboard",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/leaderboard?top_n=10",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leaderboard"],
+          "query": [{ "key": "top_n", "value": "10" }]
+        }
+      }
+    },
+    {
+      "name": "Get Player Stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/leaderboard/{{userId}}/stats",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leaderboard", "{{userId}}", "stats"]
+        }
+      }
+    },
+    {
+      "name": "Get Player Achievements",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/leaderboard/{{userId}}/achievements",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "leaderboard", "{{userId}}", "achievements"]
+        }
+      }
+    },
+    {
+      "name": "Delete User",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "users", "{{userId}}"]
+        }
+      }
+    }
+  ]
+}
