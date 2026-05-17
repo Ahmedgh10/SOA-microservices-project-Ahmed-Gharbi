@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const bodyParser = require('body-parser');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 
@@ -13,6 +14,13 @@ const resolvers = require('./graphql/resolvers');
 const app = express();
 app.use(express.json());
 
+const ensureRequestBody = (req, res, next) => {
+  if (req.body === undefined) {
+    req.body = {};
+  }
+  next();
+};
+
 // Set up REST endpoints
 app.use('/api/users', userRoutes);
 app.use('/api/sessions', sessionRoutes);
@@ -23,10 +31,16 @@ const startServer = async () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    csrfPrevention: false,
   });
 
   await server.start();
-  app.use('/graphql', expressMiddleware(server));
+  app.use(
+    '/graphql',
+    bodyParser.json({ type: ['application/json', 'application/graphql+json', 'text/plain', '*/*'] }),
+    ensureRequestBody,
+    expressMiddleware(server)
+  );
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
