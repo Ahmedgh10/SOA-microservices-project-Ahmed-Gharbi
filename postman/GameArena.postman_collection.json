@@ -16,13 +16,49 @@
       "item": [
         {
           "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('userId', body.user_id);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": "{{baseUrl}}/api/users",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"player99\",\n  \"email\": \"player99@arena.com\",\n  \"password\": \"secure123\"\n}"
+              "raw": "{\n  \"username\": \"player99_{{$timestamp}}\",\n  \"email\": \"player99_{{$timestamp}}@arena.com\",\n  \"password\": \"secure123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Second User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('playerTwoId', body.user_id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"player_two_{{$timestamp}}\",\n  \"email\": \"player_two_{{$timestamp}}@arena.com\",\n  \"password\": \"secure123\"\n}"
             }
           }
         },
@@ -48,15 +84,8 @@
             "url": "{{baseUrl}}/api/users/{{userId}}",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"player99_updated\",\n  \"email\": \"player99.updated@arena.com\"\n}"
+              "raw": "{\n  \"username\": \"player99_updated_{{$timestamp}}\",\n  \"email\": \"player99.updated_{{$timestamp}}@arena.com\"\n}"
             }
-          }
-        },
-        {
-          "name": "Delete User",
-          "request": {
-            "method": "DELETE",
-            "url": "{{baseUrl}}/api/users/{{userId}}"
           }
         }
       ]
@@ -66,6 +95,18 @@
       "item": [
         {
           "name": "Create Session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('sessionId', body.session_id);"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -177,7 +218,7 @@
             "url": "{{baseUrl}}/graphql",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"query\": \"mutation { createUser(username: \\\"graphql_player\\\", email: \\\"graphql@arena.com\\\", password: \\\"secure123\\\") { user_id username email total_wins created_at } }\"\n}"
+              "raw": "{\n  \"query\": \"mutation CreateUser($username: String!, $email: String!) { createUser(username: $username, email: $email, password: \\\"secure123\\\") { user_id username email total_wins created_at } }\",\n  \"variables\": {\n    \"username\": \"graphql_player_{{$timestamp}}\",\n    \"email\": \"graphql_{{$timestamp}}@arena.com\"\n  }\n}"
             }
           }
         },
@@ -191,6 +232,18 @@
               "mode": "raw",
               "raw": "{\n  \"query\": \"mutation EndSession($sessionId: ID!, $winnerId: ID!) { endSession(session_id: $sessionId, winner_id: $winnerId, scores: [{ player_id: $winnerId, score: 1000 }]) { session_id status winner_id player_ids } }\",\n  \"variables\": { \"sessionId\": \"{{sessionId}}\", \"winnerId\": \"{{userId}}\" }\n}"
             }
+          }
+        }
+      ]
+    },
+    {
+      "name": "REST - Cleanup",
+      "item": [
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/users/{{userId}}"
           }
         }
       ]
