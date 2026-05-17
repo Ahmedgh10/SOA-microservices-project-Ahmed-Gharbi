@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package leaderboard;
+
+service LeaderboardService {
+  rpc GetLeaderboard      (LeaderboardRequest)       returns (LeaderboardResponse);
+  rpc GetPlayerStats      (PlayerStatsRequest)       returns (PlayerStatsResponse);
+  rpc GetAchievements     (AchievementsRequest)      returns (AchievementsResponse);
+  rpc UpdateScore         (UpdateScoreRequest)       returns (UpdateScoreResponse);
+}
+
+message LeaderboardRequest {
+  int32  top_n    = 1;
+  string game     = 2;   // optional filter
+}
+
+message PlayerStatsRequest {
+  string player_id = 1;
+}
+
+message AchievementsRequest {
+  string player_id = 1;
+}
+
+message UpdateScoreRequest {
+  string player_id   = 1;
+  string game        = 2;
+  int32  score       = 3;
+  bool   is_win      = 4;
+}
+
+message LeaderboardEntry {
+  string player_id = 1;
+  string username  = 2;
+  int32  total_score = 3;
+  int32  rank      = 4;
+  int32  wins      = 5;
+}
+
+message LeaderboardResponse {
+  repeated LeaderboardEntry entries = 1;
+}
+
+message PlayerStatsResponse {
+  string player_id    = 1;
+  int32  total_score  = 2;
+  int32  wins         = 3;
+  int32  games_played = 4;
+  int32  rank         = 5;
+}
+
+message Achievement {
+  string id          = 1;
+  string title       = 2;
+  string description = 3;
+  string unlocked_at = 4;
+}
+
+message AchievementsResponse {
+  repeated Achievement achievements = 1;
+}
+
+message UpdateScoreResponse {
+  bool   success = 1;
+  string message = 2;
+}

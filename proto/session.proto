@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package session;
+
+service SessionService {
+  rpc CreateSession  (CreateSessionRequest)  returns (SessionResponse);
+  rpc GetSession     (GetSessionRequest)     returns (SessionResponse);
+  rpc JoinSession    (JoinSessionRequest)    returns (SessionResponse);
+  rpc EndSession     (EndSessionRequest)     returns (SessionResponse);
+  rpc ListSessions   (ListSessionsRequest)   returns (ListSessionsResponse);
+}
+
+message CreateSessionRequest {
+  string game_name  = 1;
+  string host_id    = 2;
+  int32  max_players = 3;
+}
+
+message GetSessionRequest {
+  string session_id = 1;
+}
+
+message JoinSessionRequest {
+  string session_id = 1;
+  string player_id  = 2;
+}
+
+message EndSessionRequest {
+  string session_id = 1;
+  string winner_id  = 2;
+  repeated PlayerScore scores = 3;
+}
+
+message PlayerScore {
+  string player_id = 1;
+  int32  score     = 2;
+}
+
+message ListSessionsRequest {
+  string status = 1;   // "open" | "in_progress" | "finished"
+}
+
+message SessionResponse {
+  string session_id  = 1;
+  string game_name   = 2;
+  string host_id     = 3;
+  string status      = 4;
+  string winner_id   = 5;
+  string created_at  = 6;
+  repeated string player_ids = 7;
+}
+
+message ListSessionsResponse {
+  repeated SessionResponse sessions = 1;
+}

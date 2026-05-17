@@ -1,0 +1,199 @@
+{
+  "info": {
+    "name": "GameArena API",
+    "description": "REST and GraphQL requests for the GameArena microservices platform through the API Gateway.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "userId", "value": "USER_ID_HERE" },
+    { "key": "playerTwoId", "value": "PLAYER_2_ID_HERE" },
+    { "key": "sessionId", "value": "SESSION_ID_HERE" }
+  ],
+  "item": [
+    {
+      "name": "REST - Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"player99\",\n  \"email\": \"player99@arena.com\",\n  \"password\": \"secure123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users?page=1&limit=10"
+          }
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/users/{{userId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"player99_updated\",\n  \"email\": \"player99.updated@arena.com\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "REST - Sessions",
+      "item": [
+        {
+          "name": "Create Session",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/sessions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game_name\": \"Valorant\",\n  \"host_id\": \"{{userId}}\",\n  \"max_players\": 5\n}"
+            }
+          }
+        },
+        {
+          "name": "List Sessions",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/sessions?status=open"
+          }
+        },
+        {
+          "name": "Get Session",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/sessions/{{sessionId}}"
+          }
+        },
+        {
+          "name": "Join Session",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/sessions/{{sessionId}}/join",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"player_id\": \"{{playerTwoId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "End Session",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/sessions/{{sessionId}}/end",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"winner_id\": \"{{userId}}\",\n  \"scores\": [\n    { \"player_id\": \"{{userId}}\", \"score\": 1000 },\n    { \"player_id\": \"{{playerTwoId}}\", \"score\": 500 }\n  ]\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "REST - Leaderboard",
+      "item": [
+        {
+          "name": "Get Leaderboard",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/leaderboard?top_n=10"
+          }
+        },
+        {
+          "name": "Get Player Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/leaderboard/{{userId}}/stats"
+          }
+        },
+        {
+          "name": "Get Player Achievements",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/leaderboard/{{userId}}/achievements"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL",
+      "item": [
+        {
+          "name": "Leaderboard Query",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/graphql",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query { getLeaderboard(top_n: 10) { rank player_id username total_score wins } }\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Player Dashboard Query",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/graphql",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query PlayerDashboard($playerId: ID!) { getPlayerStats(player_id: $playerId) { player_id total_score wins games_played rank } getPlayerAchievements(player_id: $playerId) { title description unlocked_at } }\",\n  \"variables\": { \"playerId\": \"{{userId}}\" }\n}"
+            }
+          }
+        },
+        {
+          "name": "Create User Mutation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/graphql",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation { createUser(username: \\\"graphql_player\\\", email: \\\"graphql@arena.com\\\", password: \\\"secure123\\\") { user_id username email total_wins created_at } }\"\n}"
+            }
+          }
+        },
+        {
+          "name": "End Session Mutation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/graphql",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation EndSession($sessionId: ID!, $winnerId: ID!) { endSession(session_id: $sessionId, winner_id: $winnerId, scores: [{ player_id: $winnerId, score: 1000 }]) { session_id status winner_id player_ids } }\",\n  \"variables\": { \"sessionId\": \"{{sessionId}}\", \"winnerId\": \"{{userId}}\" }\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
